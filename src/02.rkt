@@ -27,27 +27,27 @@ wrapping paper should they order?
 #lang racket
 
 (module+ test
-    (require (prefix-in test: rackunit)))
+  (require (prefix-in test: rackunit)))
 
 ;; purpose:
 ;;     given its dimensions, calculate the surface area of a box
 ;; contract:
 ;;     Integer Integer Integer -> Integer
 (module+ test
-    ;; a box with 2x3x4 should need 58 units of paper
-    (test:check-equal? (surface-area-of-box 2 3 4)
-                       58
-                       "Failed for the 2x3x4 box")
-    ;; a box with 1x1x10 should need 43 units of paper
-    (test:check-equal? (surface-area-of-box 1 1 10)
-                       43
-                       "Failed for the 1x1x10 box"))
+  ;; a box with 2x3x4 should need 58 units of paper
+  (test:check-equal? (surface-area-of-box 2 3 4)
+                     58
+                     "Failed for the 2x3x4 box")
+  ;; a box with 1x1x10 should need 43 units of paper
+  (test:check-equal? (surface-area-of-box 1 1 10)
+                     43
+                     "Failed for the 1x1x10 box"))
 (define (surface-area-of-box length width height)
-    (let ([surface-1 (* length width)]
-          [surface-2 (* width height)]
-          [surface-3 (* height length)])
-          (+ (* 2 surface-1) (* 2 surface-2) (* 2 surface-3)
-             (min surface-1 surface-2 surface-3))))
+  (let ([surface-1 (* length width)]
+        [surface-2 (* width height)]
+        [surface-3 (* height length)])
+    (+ (* 2 surface-1) (* 2 surface-2) (* 2 surface-3)
+       (min surface-1 surface-2 surface-3))))
 
 ;; purpose:
 ;;     given a string of the format "LxWxH", find the individual dimensions of
@@ -55,15 +55,15 @@ wrapping paper should they order?
 ;; contract:
 ;;     String -> (Listof Integer)
 (module+ test
-    (test:check-equal? (get-box-sizes "1x2x3")
-                       (list 1 2 3)
-                       "Failed to grab information for the 1x2x3 sized box")
-    (test:check-equal? (get-box-sizes "1x22x3")
-                       (list 1 22 3)
-                       "Failed to grab information for the 1x22x3 sized box"))
+  (test:check-equal? (get-box-sizes "1x2x3")
+                     (list 1 2 3)
+                     "Failed to grab information for the 1x2x3 sized box")
+  (test:check-equal? (get-box-sizes "1x22x3")
+                     (list 1 22 3)
+                     "Failed to grab information for the 1x22x3 sized box"))
 (define (get-box-sizes info-str)
-    (map string->number
-        (string-split info-str "x")))
+  (map string->number
+       (string-split info-str "x")))
 
 ;; purpose:
 ;;     given the file with the dimensions of each box, find the total amount of
@@ -71,8 +71,8 @@ wrapping paper should they order?
 ;; contract:
 ;;     String -> Integer
 (define (wrap-presents filename)
-    (for/sum ([line (file->lines filename)])
-        (apply surface-area-of-box (get-box-sizes line))))
+  (for/sum ([line (file->lines filename)])
+    (apply surface-area-of-box (get-box-sizes line))))
 
 (wrap-presents "02-input.txt") ;; => 1586300
 
@@ -106,25 +106,25 @@ How many total feet of ribbon should they order?
 ;; contract:
 ;;     Integer Integer -> Integer
 (define (rectangular-perimeter l1 l2)
-    (+ (* 2 l1) (* 2 l2)))
+  (+ (* 2 l1) (* 2 l2)))
 
 ;; purpose:
 ;;     calculate the needed amount of ribbon for a present
 ;; contract:
 ;;     String -> Integer
 (module+ test
-    (test:check-equal? (ribbon-dat-present 2 3 4)
-                       34
-                       "Failed for the 2x3x4 box")
-    (test:check-equal? (ribbon-dat-present 1 1 10)
-                       14
-                       "Failed for the 1x1x10 box"))
+  (test:check-equal? (ribbon-dat-present 2 3 4)
+                     34
+                     "Failed for the 2x3x4 box")
+  (test:check-equal? (ribbon-dat-present 1 1 10)
+                     14
+                     "Failed for the 1x1x10 box"))
 (define (ribbon-dat-present box-len box-width box-height)
-    (let ([perimeter-1 (rectangular-perimeter box-len box-width)]
-          [perimeter-2 (rectangular-perimeter box-len box-height)]
-          [perimeter-3 (rectangular-perimeter box-width box-height)]
-          [volume      (* box-len box-width box-height)])
-        (+ volume (min perimeter-1 perimeter-2 perimeter-3))))
+  (let ([perimeter-1 (rectangular-perimeter box-len box-width)]
+        [perimeter-2 (rectangular-perimeter box-len box-height)]
+        [perimeter-3 (rectangular-perimeter box-width box-height)]
+        [volume      (* box-len box-width box-height)])
+    (+ volume (min perimeter-1 perimeter-2 perimeter-3))))
 
 ;; purpose:
 ;;     given the file with the dimensions of each box, find the total amount of
@@ -132,7 +132,7 @@ How many total feet of ribbon should they order?
 ;; contract:
 ;;     String -> Integer
 (define (ribbon-all-presents filename)
-    (for/sum ([line (file->lines filename)])
-        (apply ribbon-dat-present (get-box-sizes line))))
+  (for/sum ([line (file->lines filename)])
+    (apply ribbon-dat-present (get-box-sizes line))))
 
 (ribbon-all-presents "02-input.txt") ;; => 3737498
