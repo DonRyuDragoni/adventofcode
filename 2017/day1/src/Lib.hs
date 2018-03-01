@@ -77,59 +77,44 @@ module Lib
 
 import Data.Char
 
+-- Parser for the captcha. Takes the string input and turn it into a list of
+-- numbers. No need to worry about non-digit characters, they are taken care of.
 parseCaptcha :: String -> [Int]
 parseCaptcha = map digitToInt . takeWhile isDigit
 
-{-
-    [1 2 3 4] len = 4
-     | | | |
-     | | | 3
-     | | 2
-     | 1
-     0
-
-     | | | 7 ??? = 3
-     | | 6   ??? = 2
-     | 5     ??? = 1
-     4       ??? = 0
-
-     ??? = mod len
--}
-getNextElement :: [Int] -> Int -> Int
-getNextElement lst curr =
-  let
-    len :: Int
-    len = length lst
-
-    distance :: Int
-    distance = len `div` 2
-
-    pos :: Int
-    pos = (curr + distance) `mod` len
-  in
-    lst !! pos
-
+-- The actual solver for the captcha. Takes the parsed input and returns the sum
+-- of the digits according to the specified rules.
 sumDigits :: [Int] -> Int
-sumDigits [] = 0
 sumDigits lst =
   let
-    sumDigits' :: [Int] -> Int -> Int -> Int
+    -- The real `sumDigits`, hidden for convenience. Takes two lists and and
+    -- accumulator to return the sum of the captcha.
+    sumDigits' :: [Int] -> [Int] -> Int -> Int
 
-    -- Base case: the list was fully exausted, leaving the last element
-    -- behind. This means the work is done, so return the result.
-    sumDigits' [] acc _ = acc
+    -- Base case: One of the lists is exausted. Work is done, return the sum.
+    sumDigits' [] _ acc = acc
+    sumDigits' _ [] acc = acc
 
-    -- General case: the list still has elements in it. If the current head is
-    -- equal to the element halfway around the list, add it to the count.
-    sumDigits' (x:xs) acc cnt =
-      if x == getNextElement lst cnt then
-        sumDigits' xs (acc + x) (succ cnt)
+    -- General case: both lists have elements in them. If both heads are equal,
+    -- add those elements to the accumulator, else, just pass the tail along.
+    sumDigits' (x:xs) (y:ys) acc =
+      if x == y then
+        sumDigits' xs ys (acc + x + y)
       else
-        sumDigits' xs acc (succ cnt)
-  in
-    -- Starting state for the recursion: total is zero and the list has a copy
-    -- of the first element as its last.
-    sumDigits' lst 0 0
+        sumDigits' xs ys acc
 
+    -- Split `lst` in half to pass into `sumDigits'`.
+
+    firstHalf :: [Int]
+    firstHalf = take (length lst `div` 2) lst
+
+    secondHalf :: [Int]
+    secondHalf = drop (length lst `div` 2) lst
+  in
+    -- Starting state for the recursion: `lst` is split in two and the
+    -- accumulator is zero.
+    sumDigits' firstHalf secondHalf 0
+
+-- Exported solver function. Parses the input and sums the digits.
 solveCaptcha :: String -> Int
 solveCaptcha = sumDigits . parseCaptcha
