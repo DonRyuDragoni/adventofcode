@@ -1,0 +1,28 @@
+name:      day1
+version:   1.0.0.0
+license:   BSD3
+author:    DonRyuDragoni
+copyright: 2018 DonRyuDragoni
+
+dependencies:
+  - base >= 4.7 && < 5
+
+library:
+  source-dirs: src
+
+executables:
+  day1-exe:
+    main:        Main.hs
+    source-dirs: app
+    dependencies:
+      - day1
+
+tests:
+  day1-test:
+    main:        Main.hs
+    source-dirs: test
+    dependencies:
+      - day1
+      - test-framework
+      - test-framework-hunit
+      - HUnit
