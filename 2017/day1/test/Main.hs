@@ -6,41 +6,41 @@ import Lib
 
 example1 = TestCase $ assertEqual "1122 => 3"
   3
-  (solveCaptcha "1122")
+  (solveCaptcha1 "1122")
 
 example2 = TestCase $ assertEqual "1111 => 4"
   4
-  (solveCaptcha "1111")
+  (solveCaptcha1 "1111")
 
 example3 = TestCase $ assertEqual "1234 => 0"
   0
-  (solveCaptcha "1234")
+  (solveCaptcha1 "1234")
 
 example4 = TestCase $ assertEqual "91212129 => 9"
   9
-  (solveCaptcha "91212129")
+  (solveCaptcha1 "91212129")
 
 -- Part two
 
 example5 = TestCase $ assertEqual "1212 => 6"
   6
-  (solveCaptcha "1212")
+  (solveCaptcha2 "1212")
 
 example6 = TestCase $ assertEqual "1221 => 0"
   0
-  (solveCaptcha "1221")
+  (solveCaptcha2 "1221")
 
 example7 = TestCase $ assertEqual "123425 => 4"
   4
-  (solveCaptcha "123425")
+  (solveCaptcha2 "123425")
 
 example8 = TestCase $ assertEqual "123123 => 12"
   12
-  (solveCaptcha "123123")
+  (solveCaptcha2 "123123")
 
 example9 = TestCase $ assertEqual "12131415 => 4"
   4
-  (solveCaptcha "12131415")
+  (solveCaptcha2 "12131415")
 
 tests = TestList
   [ TestLabel "First example"   example1

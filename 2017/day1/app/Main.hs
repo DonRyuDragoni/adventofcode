@@ -5,4 +5,5 @@ import Lib
 main :: IO ()
 main = do
   file <- readFile "input.txt"
-  print $ solveCaptcha file
+  putStrLn $ show $ solveCaptcha1 file
+  putStrLn $ show $ solveCaptcha2 file

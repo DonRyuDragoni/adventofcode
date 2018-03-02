@@ -1,5 +1,17 @@
+module Lib
+  ( solveCaptcha1
+  , solveCaptcha2
+  ) where
+
+import Data.Char
+
+-- Parser for the captcha. Takes the string input and turn it into a list of
+-- numbers. No need to worry about non-digit characters, they are taken care of.
+parseCaptcha :: String -> [Int]
+parseCaptcha = map digitToInt . takeWhile isDigit
+
 {-
-Day 1: Inverse Captcha
+                             Day 1: Inverse Captcha
 
 The night before Christmas, one of Santa's Elves calls you in a panic. "The
 printer's broken! We can't print the Naughty or Nice List!" By the time you make
@@ -43,8 +55,34 @@ For example:
       the last digit, 9.
 
 What is the solution to your captcha?
+-}
 
---- Part Two ---
+-- Solver for the first captcha. Takes the parsed input and returns the sum of
+-- the digits according to the specified rules.
+part1 :: [Int] -> Int
+part1 lst =
+  let
+    sumDigits :: [Int] -> Int -> Int
+
+    -- Base case: the list is exausted, so return the accumulated value.
+    sumDigits (_:[]) acc = acc
+
+    -- General case: The list is not fully eaten. Compare the first two numbers
+    -- and add them to the accumulator if they're equal.
+    sumDigits (x:y:xs) acc =
+      if x == y then
+        sumDigits (y:xs) (acc + x)
+      else
+        sumDigits (y:xs) acc
+  in
+    sumDigits (lst ++ [head lst]) 0
+
+-- Exported solver for the first half of the problem.
+solveCaptcha1 :: String -> Int
+solveCaptcha1 = part1 . parseCaptcha
+
+{-
+                                    Part Two
 
 You notice a progress bar that jumps to 50% completion. Apparently, the door
 isn't yet satisfied, but it did emit a star as encouragement. The instructions
@@ -68,42 +106,30 @@ For example:
     - 123123 produces 12.
 
     - 12131415 produces 4.
-
 -}
 
-module Lib
-  ( solveCaptcha
-  ) where
-
-import Data.Char
-
--- Parser for the captcha. Takes the string input and turn it into a list of
--- numbers. No need to worry about non-digit characters, they are taken care of.
-parseCaptcha :: String -> [Int]
-parseCaptcha = map digitToInt . takeWhile isDigit
-
--- The actual solver for the captcha. Takes the parsed input and returns the sum
--- of the digits according to the specified rules.
-sumDigits :: [Int] -> Int
-sumDigits lst =
+-- Solver for the second captcha. Takes the parsed input and returns the sum of
+-- the digits according to the specified rules.
+part2 :: [Int] -> Int
+part2 lst =
   let
     -- The real `sumDigits`, hidden for convenience. Takes two lists and and
     -- accumulator to return the sum of the captcha.
-    sumDigits' :: [Int] -> [Int] -> Int -> Int
+    sumDigits :: [Int] -> [Int] -> Int -> Int
 
     -- Base case: One of the lists is exausted. Work is done, return the sum.
-    sumDigits' [] _ acc = acc
-    sumDigits' _ [] acc = acc
+    sumDigits [] _ acc = acc
+    sumDigits _ [] acc = acc
 
     -- General case: both lists have elements in them. If both heads are equal,
     -- add those elements to the accumulator, else, just pass the tail along.
-    sumDigits' (x:xs) (y:ys) acc =
+    sumDigits (x:xs) (y:ys) acc =
       if x == y then
-        sumDigits' xs ys (acc + x + y)
+        sumDigits xs ys (acc + x + y)
       else
-        sumDigits' xs ys acc
+        sumDigits xs ys acc
 
-    -- Split `lst` in half to pass into `sumDigits'`.
+    -- Split `lst` in half to pass into `sumDigits`.
 
     firstHalf :: [Int]
     firstHalf = take (length lst `div` 2) lst
@@ -113,8 +139,8 @@ sumDigits lst =
   in
     -- Starting state for the recursion: `lst` is split in two and the
     -- accumulator is zero.
-    sumDigits' firstHalf secondHalf 0
+    sumDigits firstHalf secondHalf 0
 
--- Exported solver function. Parses the input and sums the digits.
-solveCaptcha :: String -> Int
-solveCaptcha = sumDigits . parseCaptcha
+-- Exported solver for the second half of the problem.
+solveCaptcha2 :: String -> Int
+solveCaptcha2 = part2 . parseCaptcha
