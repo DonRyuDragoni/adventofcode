@@ -1,4 +1,4 @@
-name:      day1
+name:      day01
 version:   1.0.0.0
 license:   BSD3
 author:    DonRyuDragoni
@@ -11,18 +11,18 @@ library:
   source-dirs: src
 
 executables:
-  day1-exe:
+  main:
     main:        Main.hs
     source-dirs: app
     dependencies:
-      - day1
+      - day01
 
 tests:
-  day1-test:
+  test:
     main:        Main.hs
     source-dirs: test
     dependencies:
-      - day1
+      - day01
       - test-framework
       - test-framework-hunit
       - HUnit
